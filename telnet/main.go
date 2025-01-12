@@ -41,9 +41,6 @@ func main() {
 			CheckError(err)
 			fmt.Println("Bytes written", n)
 			lines_sent := make([]string, 100)
-			//Write something ala: "user>" or something to the client
-			//Maybe write a prompt? like "$"
-			//Keep reading from conn until connection is closed from client
 			buf := make([]byte, 0, 4096)
 			tmp := make([]byte, 256)
 			lb_counter := 0
@@ -64,16 +61,11 @@ func main() {
 					}
 				}
 				if old_lb < lb_counter {
-					//conn.Write(buf[old_lb:lb_counter])
 					lines_sent = append(lines_sent, base64.StdEncoding.EncodeToString(buf[old_lb:lb_counter]))
 					fmt.Println(t.Format("2006-01-02 15:04:05"), ",", conn.RemoteAddr().String(), ",", lines_sent[len(lines_sent)-1])
 					conn.Write([]byte("\n$"))
 				}
 			}
-			//Save data in a form as:
-			//Timestamp start, Timestamp end, Client ip, Client port, Length of data recived, Data recived in base64
-			//Write data to a csv file
-			//io.Copy(conn, conn)
 			fmt.Println("Connection done")
 		}(conn)
 	}
